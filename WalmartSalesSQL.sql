@@ -1,0 +1,371 @@
+create database salesDatabaseWalmart;
+
+USE salesDatabaseWalmart;
+
+
+CREATE TABLE sales (
+   invoice_id VARCHAR(30) NOT NULL PRIMARY KEY,
+   branch VARCHAR(5) NOT NULL,
+   city VARCHAR(30) NOT NULL,
+   customer_type VARCHAR(30) NOT NULL,
+   gender VARCHAR(10) NOT NULL,
+   product_line VARCHAR(100) NOT NULL,
+   unit_price DECIMAL(10, 2) NOT NULL,
+   quantity INT NOT NULL,
+   vat DECIMAL(6, 4) NOT NULL,
+   total DECIMAL(12, 4) NOT NULL,
+   date DATETIME NOT NULL,
+   time TIME NOT NULL,
+   payment_method VARCHAR(15) NOT NULL,
+   cogs DECIMAL(12, 4),
+   gross_margin_pct FLOAT(11, 9),
+   gross_income DECIMAL(12, 4) NOT NULL,
+   rating FLOAT(2, 1)
+);
+
+
+select * from salesdatabasewalmart.sales;
+
+select 
+   time ,
+   (case
+    when 'time' between "00:00:00" and "12:00:00" then  "Morning"
+    when 'time' between "12:01:00" and "16:00:00" then  "Morning"
+    else "Evening"
+    end
+    ) as time_of_date
+   from sales;
+
+alter  table sales add column time_of_day varchar(20);
+
+
+
+UPDATE sales
+SET time_of_day =
+(
+    CASE
+        WHEN time BETWEEN '00:00:00' AND '12:00:00' THEN 'Morning'
+        WHEN time BETWEEN '12:01:00' AND '16:00:00' THEN 'Afternoon'
+        ELSE 'Evening'
+    END
+);
+
+
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE sales
+SET time_of_day =
+(
+   CASE
+        WHEN 'time' BETWEEN "00:00:00" AND "12:00:00" THEN "Morning"
+        WHEN 'time' BETWEEN "12:01:00" AND "16:00:00" THEN "Afternoon"
+        ELSE "Evening"
+    END
+);
+
+
+SELECT * FROM sales;
+
+select 
+    date,
+    dayname(date) as day_name
+from sales;
+    
+alter table sales add   column day_name varchar (10);
+
+update sales
+set day_name =  dayname(date);
+
+select
+  date,
+  monthname(date)
+  from sales;
+
+alter table sales add   column month_name varchar (10);
+
+update sales
+set month_name = monthname(date);
+
+ -- How many unique cities does the have?
+
+select
+ distinct city
+ from salesdatabasewalmart.sales;
+
+-- In which city is each branch
+
+select
+ distinct branch
+ from salesdatabasewalmart.sales;
+ 
+ 
+ -- In which city is each branch?
+ SELECT branch, city
+FROM salesdatabasewalmart.sales;
+
+
+-- How many unique product lines does the date have?
+select
+ distinct product_line
+ from salesdatabasewalmart.sales;
+
+-- What is the most common payment line?
+select
+payment_method, 
+ count(payment_method)as count
+ from salesdatabasewalmart.sales
+ group by payment_method
+ order by count  desc;
+
+-- What is the most selling product line?,
+
+select
+product_line,
+ count(product_line)as cnt
+ from salesdatabasewalmart.sales
+ group by product_line
+ order by cnt desc;
+
+-- What is the total revenue by moth?
+
+SELECT
+    month_name,
+    SUM(total) AS total_revenue
+FROM
+    sales
+GROUP BY
+    month_name
+ORDER BY
+    total_revenue desc;
+    
+    -- What month had the large COGS
+    
+    SELECT 
+    month_name as month,
+    sum(cogs) as cogs
+FROM salesdatabasewalmart.sales
+group by month_name
+order by cogs desc;
+
+-- What product line had the largest revenue?
+SELECT 
+    product_line ,
+    sum(total) as total_revenue
+FROM salesdatabasewalmart.sales
+group by product_line
+order by total_revenue desc;
+
+
+-- What is the city largest revenue?
+SELECT
+	branch,
+    City,
+    SUM(Total) AS total_revenue
+FROM
+    Sales
+GROUP BY
+    City,branch
+ORDER BY
+    total_revenue DESC;
+    
+    -- What product line had the largest VAT?
+    
+    SELECT
+    "Product line",
+    SUM(VAT) AS AVG_tax
+FROM
+    Sales
+GROUP BY
+    Product_line
+ORDER BY
+    AVG_tax DESC;
+
+/*
+Fetch each product line add a column to those product line showing 
+"Good", "Bad". Good if itss greater than average sales.
+*/
+
+    SELECT
+    branch,
+    SUM(quantity) AS qty
+FROM
+    sales
+GROUP BY
+    branch
+HAVING
+    SUM(quantity) > (SELECT AVG(quantity) from sales);
+
+    
+-- Which brance sold more products than avrage product sold?
+SELECT
+    branch,
+    SUM(quantity) AS total_quantity
+FROM
+    sales
+GROUP BY
+    branch
+HAVING
+    SUM(quantity) > (SELECT AVG(quantity) FROM sales);
+
+-- What is the most common product line by gender?
+
+    
+    SELECT
+    gender,
+    product_line,
+    COUNT(gender) AS total_cnt
+FROM
+    salesdatabasewalmart.sales
+GROUP BY
+    gender, product_line
+ORDER BY
+    total_cnt DESC;
+    
+    
+-- What is the average rating of each product line?
+SELECT
+    
+   round (AVG(Rating),2) AS AverageRating,
+    Product_line
+FROM
+    salesdatabasewalmart.sales
+GROUP BY
+    Product_line
+ order by AverageRating desc;
+ 
+ 
+ /* --------------------------------------Sales----------------------------------------
+ */
+ 
+-- Number of sales made in each time of the per weekday.
+   
+   Select *
+   from salesdatabasewalmart.sales;
+   
+  
+       
+       
+       
+   select 
+    time_of_day,
+    count(*) as total_sales
+   from sales
+   group by time_of_day
+   order by total_sales desc;
+
+select 
+    time_of_day,
+    count(*) as total_sales
+   from sales
+   where day_name = "Monday"
+   group by time_of_day
+   order by total_sales desc;
+   
+   -- Which of the customer types bring the most revenue?
+   SELECT
+    customer_type,
+    SUM(Total) AS total_revenue
+FROM
+    salesdatabasewalmart.sales
+GROUP BY
+    customer_type
+ORDER BY
+    total_revenue DESC;
+    
+    
+    -- Which city has the largest tax perccent?VAT (value added TXT)?
+    
+    SELECT
+    City,
+    AVG(VAT) AS VAT
+FROM
+    sales
+GROUP BY
+    City
+ORDER BY
+    VAT DESC;
+
+    /* ------------------------------------------------------------------------------------------------
+    -----------------------------------------Customer-----------------------------------*/
+    
+    -- How many unique customer type does the date have?
+
+   SELECT
+ distinct(customer_type) 
+FROM
+    salesdatabasewalmart.sales;
+    
+    -- How many uniquce pyment payment  methoods daoes the data have ?
+    
+SELECT
+ distinct(payment_method) 
+FROM
+    salesdatabasewalmart.sales;
+    
+-- what is the most common customer type?
+    
+    SELECT customer_type,
+    COUNT(customer_type) AS type_count
+FROM salesdatabasewalmart.sales
+GROUP BY customer_type
+ORDER BY type_count DESC;
+
+
+-- what is the genlar of most of the customer?
+
+ select 
+     gender, 
+     count(*) as gender_cnt
+     from salesdatabasewalmart.sales
+     group by gender
+     order by gender_cnt desc;
+
+    select 
+     gender, 
+     count(*) as gender_cnt
+     from salesdatabasewalmart.sales
+     where branch = "A"
+     group by gender
+     order by gender_cnt desc;
+        
+-- Which time of the day do customers give most ratings?
+select
+	time_of_day,
+    AVG(rating) as avg_rating
+	from salesdatabasewalmart.sales
+    group by time_of_day
+    order by avg_rating desc;
+    
+    
+   -- Which time of the day do customers give most ratings per branch?
+    
+    select
+	branch,
+    AVG(rating) as avg_rating
+	from salesdatabasewalmart.sales
+    group by branch
+    order by avg_rating desc;
+    
+    
+    -- which day to the week has the best avg ratings?
+    
+    select
+	day_name,
+    AVG(rating) as avg_rating
+	from salesdatabasewalmart.sales
+    group by day_name
+    order by avg_rating desc;
+    
+    -- Which day the  week has best average rating rating per branch?
+
+select
+	day_name,
+    AVG(rating) as avg_rating
+	from salesdatabasewalmart.sales
+    where branch = "B"
+    group by day_name
+    order by avg_rating desc;
+    
+    

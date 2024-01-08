@@ -1,0 +1,83 @@
+Analysis List
+++++++++++++++++++++++++++++++++++++++++++++++
+1. Product Analysis
+--------------------------------------------------------------
+Conduct analysis on the data to understantand the different product lines, the lines performing best 
+and the product line the to be improved.
+
+2.Sales Analysis
+-------------------------------------------------------------------
+ This analysis aims to answer the question of thesales trends of product. The result of this help use measure the 
+effectiveness of each sales strategy the bussiness applies and with modifications are needed are to gain more sales
+
+3.Customer analysis
+-----------------------------------------------------------------------
+This analysis aims to uncover the different customes segments, purchase trends  and the profitability of each 
+customer segment 
+
+Approach used
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+1.Data Wrangling: This is the first step where inspection of date is done to make sure NULL values and missing values are 
+detected and data replacement methods are used to replace, missing or Null values.
+     1.Build a database
+     2.Create able and insert the data.
+     3. Select columns with null vaues in them. There are no null values in our database as in creating the tabes, we set 
+not null values filtered out.
+
+2.  Feature Engineering: This will help use generate some new columns from existing ones.
+    1.Add a new column named time_of_day to give insight of sales in the Morning, Afternoon and Evening. This 
+will help answer question on which of th day most sales are made.
+
+
+
+Bussiness Qustion To Answer
+=============================================================================
+
+Generic Question
+----------------------------------------------------------------------------------
+
+1.How many unique cities does the have?
+2.In which city is each branch?
+
+
+Product
+--------------------------------------------------------------------------------
+1. How many unique product lines does the date have?
+2.What is the most common payment line?
+3.What is the most selling product line?
+4.What is the total revenue by moth?
+5.What month had the large COGS?
+6.What product line had the largest revenue?
+7.What is the city largest revenue?
+8.What product line had the largest VAT?
+9.Fetch each product line add a column to those product line showing "Good", "Bad". Good if itss greater 
+than average sales.
+10.Which brance sold more products than avrage product sold?
+11.What is the most common product line by gender?
+12.What is the average rating of each product line?
+
+
+
+Sales
+--------------------------------------------------------------------------------------
+
+1. Number of sales made in each time of the per weekday.
+2.Which of the customer types bring the most revenue?
+3.Which city has the largest tax perccent?VAT (value added TXT)?
+4. Which customer type pays  the most in VAT?
+
+Customer
+----------------------------------------------------------------------------
+1. How many unique customer type does the date have?
+2.How many uniquce pyment payment  methoods daoes the data have ?
+3.what is the most common customer type?
+4.what is the genlar of most of the customer?
+5.What is the general of the customers?
+6.What is the general distribution per branch?
+7.Which time of the day do customers give most ratings?
+8.Which time of the day do customers give most ratings per branch?
+9.which day to the week has the best avg ratings?
+10 Which day the  week has best average rating rating per branch?
+
+7.
